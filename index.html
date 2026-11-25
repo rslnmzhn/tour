@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Транснефть Тюмень — тур</title>
+<link rel="icon" href="data:,">
+<style>
+/*
+VOICE: тихий, выставочный — интерфейс не мешает пространству
+IDEA: вход в зал музея: одна табличка у двери, дальше только зал
+PICTURE: сама 3D-сцена во весь экран
+COLOUR and TYPE: тёмная вуаль #0b1622, белый текст, синий акцент #2f7fd1; Inter
+LAYOUT: холст на весь экран, одна карточка по центру, тонкая подсказка внизу
+*/
+:root{color-scheme:dark;--ink:#f2f5f8;--dim:#9fb0c2;--acc:#2f7fd1}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0;height:100%;overflow:hidden;background:#0b1622;color:var(--ink);font:16px/1.5 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+canvas{display:block;position:fixed;inset:0;width:100%;height:100%;touch-action:none;cursor:grab}
+canvas.drag{cursor:grabbing}
+.veil{position:fixed;inset:0;display:grid;place-items:center;padding:16px;background:rgba(8,16,26,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:5;transition:opacity .3s}
+.veil[hidden]{display:none}
+.card{width:min(420px,100%);text-align:center}
+h1{font-size:clamp(26px,5vw,36px);line-height:1.08;margin:0 0 6px;font-weight:650;text-wrap:balance}
+.sub{color:var(--dim);margin:0 0 22px}
+.bar{height:4px;border-radius:2px;background:rgba(255,255,255,.12);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--acc);transition:width .2s}
+#status{margin-top:10px;color:var(--dim);font-size:14px;font-variant-numeric:tabular-nums}
+button{font:inherit;font-weight:600;color:#fff;background:var(--acc);border:0;border-radius:10px;min-height:48px;padding:0 28px;cursor:pointer}
+button:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.keys{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;text-align:left;margin:22px auto 0;width:max-content;max-width:100%;font-size:14px;color:var(--dim)}
+.keys b{color:var(--ink);font-weight:600;white-space:nowrap}
+.touch-only{display:none}
+@media (hover:none) and (pointer:coarse){.desk-only{display:none}.touch-only{display:contents}}
+#hint{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translateX(-50%);padding:8px 14px;border-radius:8px;background:rgba(8,16,26,.6);color:var(--dim);font-size:13px;white-space:nowrap;pointer-events:none;z-index:4;transition:opacity 1s}
+#cross{position:fixed;left:50%;top:50%;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:rgba(255,255,255,.7);pointer-events:none;z-index:3;display:none}
+@media (prefers-reduced-motion:reduce){.veil,.bar i,#hint{transition:none}}
+</style>
+</head>
+<body>
+<div class="veil" id="loader">
+  <div class="card">
+    <h1>Транснефть&nbsp;— Тюмень</h1>
+    <p class="sub">Виртуальный тур по экспозиции</p>
+    <div class="bar"><i id="prog"></i></div>
+    <div id="status">Загрузка модели…</div>
+  </div>
+</div>
+<div class="veil" id="start" hidden>
+  <div class="card">
+    <h1 id="startTitle">Транснефть&nbsp;— Тюмень</h1>
+    <p class="sub" id="startSub">Виртуальный тур по экспозиции</p>
+    <button id="go" type="button">Войти в зал</button>
+    <div class="keys">
+      <span class="desk-only"><b>W A S D</b></span><span class="desk-only">ходьба (или стрелки)</span>
+      <span class="desk-only"><b>Мышь</b></span><span class="desk-only">осмотреться</span>
+      <span class="desk-only"><b>Shift</b></span><span class="desk-only">быстрее</span>
+      <span class="desk-only"><b>Esc</b></span><span class="desk-only">пауза</span>
+      <span class="touch-only"><b>Левая половина</b></span><span class="touch-only">ведите пальцем — ходьба</span>
+      <span class="touch-only"><b>Правая половина</b></span><span class="touch-only">ведите пальцем — обзор</span>
+    </div>
+  </div>
+</div>
+<div id="cross"></div>
+<div id="hint" hidden></div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
